@@ -55,6 +55,29 @@
       => [{:face :h1, :revealed? true, :matched? true}
           {:face :h1, :revealed? true, :matched? true}])
 
+(def sample-game
+  {:ticks 0
+   :tiles [{:face :gy} {:face :h1} {:face :h2} {:face :h4}
+           {:face :h3} {:face :fg} {:face :h5} {:face :zo}
+           {:face :h5} {:face :h2} {:face :h4} {:face :zo}
+           {:face :h1} {:face :fg} {:face :h3} {:face :zo}]
+   :sand (repeat 30 :remain)})
+
+(fact "You can survive the game"
+      (->> sample-game
+           (reveal-tile 1)
+           (reveal-tile 12)
+           (reveal-tile 2)
+           (reveal-tile 9)
+           (reveal-tile 3)
+           (reveal-tile 10)
+           (reveal-tile 4)
+           (reveal-tile 14)
+           (reveal-tile 6)
+           (reveal-tile 8)
+           :safe?)
+      => true)
+
 (fact "You can match multiple pairs"
       (->> sample-game
            (reveal-tile 1)

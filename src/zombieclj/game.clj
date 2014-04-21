@@ -1,4 +1,5 @@
-(ns zombieclj.game)
+(ns zombieclj.game
+  (:require [clojure.set :as set]))
 
 (def game-length 30)
 (def ticks-per-sand 5)
@@ -77,12 +78,25 @@
     (update-in game [:tiles] #(map init-ticks %))
     game))
 
+(defn- all-houses-matched? [tiles]
+  (->> tiles
+       (filter :matched?)
+       (map :face)
+       set
+       (set/subset? #{:h1 :h2 :h3 :h4 :h5})))
+
+(defn- update-survival-status [game]
+  (if (all-houses-matched? (:tiles game))
+    (assoc game :safe? true)
+    game))
+
 (defn reveal-tile [idx game]
   (if (can-reveal? game)
     (-> game
         (assoc-in [:tiles idx :revealed?] true)
         match-tiles
-        init-expiry)
+        init-expiry
+        update-survival-status)
     game))
 
 (defn- nil-safe-dec [num]
