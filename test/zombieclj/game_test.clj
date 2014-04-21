@@ -54,4 +54,35 @@
       => [{:face :h1, :revealed? true, :matched? true}
           {:face :h1, :revealed? true, :matched? true}])
 
+(fact "You can match multiple pairs"
+      (->> sample-game
+           (reveal-tile 1)
+           (reveal-tile 12)
+           (reveal-tile 2)
+           (reveal-tile 9)
+           :tiles
+           (filter :matched?))
+      => [{:face :h1, :revealed? true, :matched? true}
+          {:face :h2, :revealed? true, :matched? true}
+          {:face :h2, :revealed? true, :matched? true}
+          {:face :h1, :revealed? true, :matched? true}])
 
+(fact "When matching fog, the game board becomes foggy"
+      (->> sample-game
+           (reveal-tile 5)
+           (reveal-tile 13)
+           :foggy?) => true)
+
+(fact "When matching zombies, graveyard becomes zombie"
+      (->> sample-game
+           (reveal-tile 7)
+           (reveal-tile 11)
+           :tiles
+           (map :face)
+           frequencies) => {:h1 2
+                            :h2 2
+                            :h3 2
+                            :h4 2
+                            :h5 2
+                            :fg 2
+                            :zo 4})

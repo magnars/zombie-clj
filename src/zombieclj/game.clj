@@ -17,15 +17,22 @@
   {:tiles (->> tiles (mapv ->tile) shuffle)
    :sand (repeat 30 :remain)})
 
+(defn- peeking? [tile]
+  (and (:revealed? tile)
+       (not (:matched? tile))))
+
 (defn- can-reveal? [game]
-  (< (count (filter :revealed? (:tiles game))) 2))
+  (< (->> game
+          :tiles
+          (filter peeking?)
+          count) 2))
 
 (defn- pairs [[face count]]
   (when (= count 2) face))
 
 (defn- find-matched-face [tiles]
   (->> tiles
-       (filter :revealed?)
+       (filter peeking?)
        (map :face)
        frequencies
        (keep pairs)
@@ -36,11 +43,24 @@
     (assoc tile :matched? true)
     tile))
 
+(defn- zombify-graveyard [tiles]
+  (map #(if (= :gy (:face %))
+          (assoc % :face :zo)
+          %) tiles))
+
+(defn- apply-face-event [face game]
+  (case face
+    :fg (assoc game :foggy? true)
+    :zo (update-in game [:tiles] zombify-graveyard)
+    game))
+
 (defn- match-tiles [game]
-  (->> game
-       :tiles
-       (mapv (partial match-tile (find-matched-face (:tiles game))))
-       (assoc game :tiles)))
+  (let [matched (find-matched-face (:tiles game))]
+    (->> game
+         :tiles
+         (mapv (partial match-tile matched))
+         (assoc game :tiles)
+         (apply-face-event matched))))
 
 (defn reveal-tile [idx game]
   (if (can-reveal? game)
