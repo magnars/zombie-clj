@@ -110,32 +110,55 @@
                             :h5 2
                             :fg 2
                             :zo 4})
+
+(fact "Revealing a pair of flesh gobbling zombies eats time"
+      (->> sample-game
+           (reveal-tile 7)
+           (reveal-tile 11)
+           :sand
+           (take 4)) => [:zombie :zombie :zombie :remain])
+
+(defn- tick-x-times [ticks game]
+  (->> game (iterate tick) (drop ticks) first))
+
+(fact "Revealing zombies at the end of the game does not add sand"
+      (->> sample-game
+           (tick-x-times 145)
+           (reveal-tile 7)
+           (reveal-tile 11)
+           :sand
+           count) => 30)
+
+(fact "Revealing zombies hastens the end of the world"
+      (->> sample-game
+           (reveal-tile 7)
+           (reveal-tile 11)
+           (tick-x-times 136)
+           :dead?) => true)
+
 (fact
  "Tick decrements remaining ticks on peeking tiles"
 
  (->> sample-game
-           (reveal-tile 1)
-           (reveal-tile 2)
-           (tick)
-           :tiles
-           (filter :revealed?))
-      => [{:face :h1, :revealed? true, :remaining-ticks 1}
-          {:face :h2, :revealed? true, :remaining-ticks 1}])
+      (reveal-tile 1)
+      (reveal-tile 2)
+      (tick)
+      :tiles
+      (filter :revealed?))
+ => [{:face :h1, :revealed? true, :remaining-ticks 1}
+     {:face :h2, :revealed? true, :remaining-ticks 1}])
 
 (fact
  "Different revealed tiles are turned back after two ticks"
 
  (->> sample-game
-           (reveal-tile 1)
-           (reveal-tile 2)
-           (tick)
-           (tick)
-           :tiles
-           (filter :revealed?))
-      => [])
-
-(defn- tick-x-times [ticks game]
-  (->> game (iterate tick) (drop ticks) first))
+      (reveal-tile 1)
+      (reveal-tile 2)
+      (tick)
+      (tick)
+      :tiles
+      (filter :revealed?))
+ => [])
 
 (fact
  "One sand is removed for every 5 ticks"

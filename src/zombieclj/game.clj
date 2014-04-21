@@ -54,10 +54,17 @@
           (assoc % :face :zo)
           %) tiles))
 
+(defn- convert-sand [sand convert-to]
+  (take 30 (concat (take-while #(not= % :remain) sand)
+                   convert-to
+                   (drop (count convert-to) (drop-while #(not= % :remain) sand)))))
+
 (defn- apply-face-event [face game]
   (case face
     :fg (assoc game :foggy? true)
-    :zo (update-in game [:tiles] zombify-graveyard)
+    :zo (-> game
+            (update-in [:tiles] zombify-graveyard)
+            (update-in [:sand] #(convert-sand % (repeat 3 :zombie))))
     game))
 
 (defn- match-tiles [game]
@@ -113,18 +120,13 @@
 (defn- conceal-expired-tiles [tiles]
   (mapv conceal-expired-tile tiles))
 
-(defn- goneify-remain [sand]
-  (concat (take-while #(not= % :remain) sand)
-          [:gone]
-          (drop 1 (drop-while #(not= % :remain) sand))))
-
 (defn- count-down [game]
   (if (= 0 (mod (:ticks game) ticks-per-sand))
-    (update-in game [:sand] goneify-remain)
+    (update-in game [:sand] #(convert-sand % [:gone]))
     game))
 
 (defn tick [game]
-  (if (= (:ticks game) (* ticks-per-sand game-length))
+  (if (nil? (:remain (frequencies (:sand game))))
     (assoc game :dead? true)
     (-> game
         (update-in [:ticks] inc)
