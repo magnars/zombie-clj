@@ -9,7 +9,8 @@
                  [compojure "1.1.6"]
                  [quiescent "0.1.1"]]
   :main zombieclj.web
-  :profiles {:dev {:plugins [[lein-cljsbuild "1.0.2"]]
+  :profiles {:dev {:dependencies [[midje "1.6.3"]]
+                   :plugins [[lein-cljsbuild "1.0.2"]]
                    :cljsbuild {:builds [{:source-paths ["src"]
                                          :compiler {:output-to "target/classes/public/app.js"
                                                     :optimizations :whitespace
