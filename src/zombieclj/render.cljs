@@ -1,17 +1,9 @@
 (ns zombieclj.render
-  (:require [quiescent :as q :include-macros true]
-            [quiescent.dom :as d]))
-
-(def game {:foggy? true
-            :tiles [{} {} {}
-                    {:face :h1 :revealed? true}
-                    {} {}
-                    {:face :fg :revealed? true :matched? true}
-                    {:face :fg :revealed? true :matched? true}
-                    {} {} {} {} {} {} {} {}]
-           :sand (concat
-                  (repeat 5 :gone)
-                  (repeat 25 :remain))})
+  (:require [chord.client :refer [ws-ch]]
+            [cljs.core.async :refer [chan <! >! put! close! timeout]]
+            [quiescent :as q :include-macros true]
+            [quiescent.dom :as d])
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 (q/defcomponent Cell [tile]
   (d/div {:className "cell"}
@@ -42,8 +34,16 @@
 
 (q/defcomponent Game [game]
   (d/div {}
-   (Board game)
-   (Hourglass (:sand game))))
+         (Board game)
+         (Hourglass (:sand game))))
 
-(q/render (Game game)
-          (.getElementById js/document "main"))
+(enable-console-print!)
+
+(go
+  (let [server-ch (<! (ws-ch "ws://localhost:8666/ws" {:format :edn}))
+        container (.getElementById js/document "main")]
+    (go-loop []
+      (when-let [envelope (<! server-ch)]
+        (q/render (Game (:message envelope)) container)
+        (prn envelope)
+        (recur)))))

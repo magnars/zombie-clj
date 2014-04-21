@@ -7,7 +7,8 @@
                  [org.clojure/clojurescript "0.0-2173"]
                  [http-kit "2.1.16"]
                  [compojure "1.1.6"]
-                 [quiescent "0.1.1"]]
+                 [quiescent "0.1.1"]
+                 [jarohen/chord "0.3.1"]]
   :main zombieclj.web
   :profiles {:dev {:dependencies [[midje "1.6.3"]]
                    :plugins [[lein-cljsbuild "1.0.2"]]
