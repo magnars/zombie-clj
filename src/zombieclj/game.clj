@@ -21,11 +21,11 @@
   (and (:revealed? tile)
        (not (:matched? tile))))
 
+(defn- num-peeking [game]
+  (->> game :tiles (filter peeking?) count))
+
 (defn- can-reveal? [game]
-  (< (->> game
-          :tiles
-          (filter peeking?)
-          count) 2))
+  (< (num-peeking game) 2))
 
 (defn- pairs [[face count]]
   (when (= count 2) face))
@@ -62,8 +62,39 @@
          (assoc game :tiles)
          (apply-face-event matched))))
 
+(defn- init-ticks [tile]
+  (if (peeking? tile)
+    (assoc tile :remaining-ticks 2)
+    tile))
+
+(defn- init-expiry [game]
+  (if (= 2 (num-peeking game))
+    (update-in game [:tiles] #(map init-ticks %))
+    game))
+
 (defn reveal-tile [idx game]
   (if (can-reveal? game)
-    (-> (assoc-in game [:tiles idx :revealed?] true)
-        match-tiles)
+    (-> game
+        (assoc-in [:tiles idx :revealed?] true)
+        match-tiles
+        init-expiry)
     game))
+
+(defn- nil-safe-dec [num]
+  (and num (dec num)))
+
+(defn- dec-remaining-ticks [tiles]
+  (mapv #(update-in % [:remaining-ticks] nil-safe-dec) tiles))
+
+(defn- conceal-expired-tile [tile]
+  (if (= 0 (:remaining-ticks tile))
+    (dissoc tile :remaining-ticks :revealed?)
+    tile))
+
+(defn- conceal-expired-tiles [tiles]
+  (mapv conceal-expired-tile tiles))
+
+(defn tick [game]
+  (-> game
+      (update-in [:tiles] dec-remaining-ticks)
+      (update-in [:tiles] conceal-expired-tiles)))

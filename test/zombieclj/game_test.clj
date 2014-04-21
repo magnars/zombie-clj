@@ -42,8 +42,8 @@
            (reveal-tile 3)
            :tiles
            (filter :revealed?))
-      => [{:face :h1, :revealed? true}
-          {:face :h2, :revealed? true}])
+      => [{:face :h1, :revealed? true, :remaining-ticks 2}
+          {:face :h2, :revealed? true, :remaining-ticks 2}])
 
 (fact "You can reveal two tiles"
       (->> sample-game
@@ -86,3 +86,26 @@
                             :h5 2
                             :fg 2
                             :zo 4})
+(fact
+ "Tick decrements remaining ticks on peeking tiles"
+
+ (->> sample-game
+           (reveal-tile 1)
+           (reveal-tile 2)
+           (tick)
+           :tiles
+           (filter :revealed?))
+      => [{:face :h1, :revealed? true, :remaining-ticks 1}
+          {:face :h2, :revealed? true, :remaining-ticks 1}])
+
+(fact
+ "Different revealed tiles are turned back after two ticks"
+
+ (->> sample-game
+           (reveal-tile 1)
+           (reveal-tile 2)
+           (tick)
+           (tick)
+           :tiles
+           (filter :revealed?))
+      => [])
