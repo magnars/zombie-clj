@@ -1,5 +1,9 @@
 (ns zombieclj.game)
 
+(def game-length 30)
+(def ticks-per-sand 5)
+(def peeking-ticks 2)
+
 (def tiles
   [:h1 :h1
    :h2 :h2
@@ -16,7 +20,7 @@
 (defn create-game []
   {:ticks 0
    :tiles (->> tiles (mapv ->tile) shuffle)
-   :sand (repeat 30 :remain)})
+   :sand (repeat game-length :remain)})
 
 (defn- peeking? [tile]
   (and (:revealed? tile)
@@ -65,7 +69,7 @@
 
 (defn- init-ticks [tile]
   (if (peeking? tile)
-    (assoc tile :remaining-ticks 2)
+    (assoc tile :remaining-ticks peeking-ticks)
     tile))
 
 (defn- init-expiry [game]
@@ -101,12 +105,12 @@
           (drop 1 (drop-while #(not= % :remain) sand))))
 
 (defn- count-down [game]
-  (if (= 0 (mod (:ticks game) 5))
+  (if (= 0 (mod (:ticks game) ticks-per-sand))
     (update-in game [:sand] goneify-remain)
     game))
 
 (defn tick [game]
-  (if (= (:ticks game) 150)
+  (if (= (:ticks game) (* ticks-per-sand game-length))
     (assoc game :dead? true)
     (-> game
         (update-in [:ticks] inc)
