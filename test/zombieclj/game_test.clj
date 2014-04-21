@@ -43,8 +43,8 @@
            (reveal-tile 3)
            :tiles
            (filter :revealed?))
-      => [{:face :h1, :revealed? true, :remaining-ticks 2}
-          {:face :h2, :revealed? true, :remaining-ticks 2}])
+      => [{:face :h1, :revealed? true, :remaining-ticks 5}
+          {:face :h2, :revealed? true, :remaining-ticks 5}])
 
 (fact "You can reveal two tiles"
       (->> sample-game
@@ -111,6 +111,14 @@
                             :fg 2
                             :zo 4})
 
+(fact "When matching zombies, only revealed zombies become matched"
+      (->> sample-game
+           (reveal-tile 7)
+           (reveal-tile 11)
+           :tiles
+           (filter :matched?)
+           count) => 2)
+
 (fact "Revealing a pair of flesh gobbling zombies eats time"
       (->> sample-game
            (reveal-tile 7)
@@ -145,8 +153,8 @@
       (tick)
       :tiles
       (filter :revealed?))
- => [{:face :h1, :revealed? true, :remaining-ticks 1}
-     {:face :h2, :revealed? true, :remaining-ticks 1}])
+ => [{:face :h1, :revealed? true, :remaining-ticks 4}
+     {:face :h2, :revealed? true, :remaining-ticks 4}])
 
 (fact
  "Different revealed tiles are turned back after two ticks"

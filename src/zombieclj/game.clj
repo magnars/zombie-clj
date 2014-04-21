@@ -3,7 +3,8 @@
 
 (def game-length 30)
 (def ticks-per-sand 5)
-(def peeking-ticks 2)
+(def remaining-ticks 5)
+(def peeking-ticks-threshold 3)
 
 (def tiles
   [:h1 :h1
@@ -45,7 +46,8 @@
        first))
 
 (defn- match-tile [face tile]
-  (if (= face (:face tile))
+  (if (and (= face (:face tile))
+           (:revealed? tile))
     (assoc tile :matched? true)
     tile))
 
@@ -77,7 +79,7 @@
 
 (defn- init-ticks [tile]
   (if (peeking? tile)
-    (assoc tile :remaining-ticks peeking-ticks)
+    (assoc tile :remaining-ticks remaining-ticks)
     tile))
 
 (defn- init-expiry [game]
@@ -106,15 +108,17 @@
         update-survival-status)
     game))
 
-(defn- nil-safe-dec [num]
-  (and num (dec num)))
+(defn- dec-to-nil [num]
+  (and num (if (= 1 num)
+             nil
+             (dec num))))
 
 (defn- dec-remaining-ticks [tiles]
-  (mapv #(update-in % [:remaining-ticks] nil-safe-dec) tiles))
+  (mapv #(update-in % [:remaining-ticks] dec-to-nil) tiles))
 
 (defn- conceal-expired-tile [tile]
-  (if (= 0 (:remaining-ticks tile))
-    (dissoc tile :remaining-ticks :revealed?)
+  (if (= peeking-ticks-threshold (:remaining-ticks tile))
+    (dissoc tile :revealed?)
     tile))
 
 (defn- conceal-expired-tiles [tiles]

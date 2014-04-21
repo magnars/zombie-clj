@@ -1,7 +1,8 @@
 (ns zombieclj.prep)
 
 (defn- conceal-face [tile]
-  (if (:revealed? tile)
+  (if (or (:revealed? tile)
+          (and (:remaining-ticks tile) (> (:remaining-ticks tile) 0)))
     tile
     (dissoc tile :face)))
 

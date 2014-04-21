@@ -1,6 +1,6 @@
 (ns zombieclj.prep-test
   (:require [zombieclj.prep :refer :all]
-            [zombieclj.game :refer [create-game reveal-tile]]
+            [zombieclj.game :refer [create-game reveal-tile tick]]
             [midje.sweet :refer :all]))
 
 (fact
@@ -20,6 +20,18 @@
       :tiles
       (filter :face)
       count) => 1)
+
+(fact
+ "After three ticks, it still has a face"
+
+ (->> (create-game)
+      (reveal-tile 1)
+      (reveal-tile 2)
+      tick tick tick
+      prep
+      :tiles
+      (filter :face)
+      count) => 2)
 
 (fact
  "No ticks"
