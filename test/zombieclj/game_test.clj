@@ -2,7 +2,7 @@
   (:require [zombieclj.game :refer :all]
             [midje.sweet :refer :all]))
 
-(fact "Creates a game"
+(fact "Creates a game board"
       (->> (create-game)
            :tiles
            (map :face)
@@ -22,7 +22,8 @@
       (-> (create-game) :sand frequencies) => {:remain 30})
 
 (def sample-game
-  {:tiles [{:face :gy} {:face :h1} {:face :h2} {:face :h4}
+  {:ticks 0
+   :tiles [{:face :gy} {:face :h1} {:face :h2} {:face :h4}
            {:face :h3} {:face :fg} {:face :h5} {:face :zo}
            {:face :h5} {:face :h2} {:face :h4} {:face :zo}
            {:face :h1} {:face :fg} {:face :h3} {:face :zo}]
@@ -109,3 +110,29 @@
            :tiles
            (filter :revealed?))
       => [])
+
+(defn- tick-x-times [ticks game]
+  (->> game (iterate tick) (drop ticks) first))
+
+(fact
+ "One sand is removed for every 5 ticks"
+ (->> sample-game
+      (tick-x-times 5)
+      :sand
+      (take 2))
+ => [:gone :remain])
+
+(fact
+ "All sand is removed after 150 ticks"
+ (->> sample-game
+      (tick-x-times 150)
+      :sand
+      frequencies)
+ => {:gone 30})
+
+(fact
+ "The game is over after 150 ticks, and the player is fucking dead."
+ (->> sample-game
+      (tick-x-times 151)
+      :dead?)
+ => true)

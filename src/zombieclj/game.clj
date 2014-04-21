@@ -14,7 +14,8 @@
   {:face face})
 
 (defn create-game []
-  {:tiles (->> tiles (mapv ->tile) shuffle)
+  {:ticks 0
+   :tiles (->> tiles (mapv ->tile) shuffle)
    :sand (repeat 30 :remain)})
 
 (defn- peeking? [tile]
@@ -94,7 +95,21 @@
 (defn- conceal-expired-tiles [tiles]
   (mapv conceal-expired-tile tiles))
 
+(defn- goneify-remain [sand]
+  (concat (take-while #(not= % :remain) sand)
+          [:gone]
+          (drop 1 (drop-while #(not= % :remain) sand))))
+
+(defn- count-down [game]
+  (if (= 0 (mod (:ticks game) 5))
+    (update-in game [:sand] goneify-remain)
+    game))
+
 (defn tick [game]
-  (-> game
-      (update-in [:tiles] dec-remaining-ticks)
-      (update-in [:tiles] conceal-expired-tiles)))
+  (if (= (:ticks game) 150)
+    (assoc game :dead? true)
+    (-> game
+        (update-in [:ticks] inc)
+        count-down
+        (update-in [:tiles] dec-remaining-ticks)
+        (update-in [:tiles] conceal-expired-tiles))))
