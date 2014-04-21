@@ -1,10 +1,10 @@
 (ns zombieclj.web
   (:require [chord.http-kit :refer [wrap-websocket-handler]]
-            [clojure.core.async :refer [<! >! put! close! go go-loop]]
+            [clojure.core.async :refer [<! >! put! close! go go-loop timeout]]
             [compojure.core :refer [defroutes GET]]
             [compojure.route :refer [resources]]
             [org.httpkit.server :refer [run-server]]
-            [zombieclj.game :refer [create-game]]
+            [zombieclj.game :refer [create-game tick reveal-tile game-over?]]
             [zombieclj.prep :refer [prep]]))
 
 (defn index [req]
@@ -14,9 +14,20 @@
 
 (defn ws-handler [{:keys [ws-channel] :as req}]
   (println "Opened connection from" (:remote-addr req))
-  (let [game (create-game)]
+  (let [game (atom (create-game))]
+    (go-loop []
+      (when-let [envelope (<! ws-channel)]
+        (swap! game #(reveal-tile (:message envelope) %))
+        (>! ws-channel (prep @game))
+        (recur)))
     (go
-      (>! ws-channel (prep game)))))
+      (>! ws-channel (prep @game))
+      (loop []
+        (<! (timeout 200))
+        (swap! game tick)
+        (>! ws-channel (prep @game))
+        (when-not (game-over? @game)
+          (recur))))))
 
 (defroutes app
   (resources "/")

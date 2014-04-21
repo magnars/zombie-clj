@@ -8,7 +8,8 @@
 (defn- prep-tiles [tiles]
   (->> tiles
        (map conceal-face)
-       (map #(dissoc % :remaining-ticks))))
+       (map #(dissoc % :remaining-ticks))
+       (map-indexed #(assoc %2 :id %1))))
 
 (defn prep [game]
   (-> game

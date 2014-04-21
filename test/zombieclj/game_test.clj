@@ -182,3 +182,30 @@
       (tick-x-times 151)
       :dead?)
  => true)
+
+(fact
+ "game over when dead"
+ (->> sample-game
+      (tick-x-times 151)
+      game-over?)
+ => true)
+
+(fact "Game over when safe"
+      (->> sample-game
+           (reveal-tile 1)
+           (reveal-tile 12)
+           (reveal-tile 2)
+           (reveal-tile 9)
+           (reveal-tile 3)
+           (reveal-tile 10)
+           (reveal-tile 4)
+           (reveal-tile 14)
+           (reveal-tile 6)
+           (reveal-tile 8)
+           game-over?)
+      => true)
+
+(fact "Not game over"
+      (->> sample-game
+           game-over?)
+      => nil)

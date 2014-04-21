@@ -6,7 +6,10 @@
 (fact
  "Concealed tiles have no faces"
 
- (:tiles (prep (create-game))) => (repeat 16 {}))
+ (->> (create-game)
+      prep
+      :tiles
+      (map #(dissoc % :id))) => (repeat 16 {}))
 
 (fact
  "Revealed tiles has faces"
@@ -32,3 +35,9 @@
       prep
       :tiles
       (filter :remaining-ticks)) => [])
+
+(fact "Provides id for each tile"
+      (->> (create-game)
+           prep
+           :tiles
+           (map :id)) => (range 0 16))

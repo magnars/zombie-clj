@@ -5,8 +5,9 @@
             [quiescent.dom :as d])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
-(q/defcomponent Cell [tile]
-  (d/div {:className "cell"}
+(q/defcomponent Cell [tile player-moves]
+  (d/div {:className "cell"
+          :onClick #(put! player-moves (:id tile))}
          (d/div {:className (str "tile"
                                  (when (:revealed? tile) " revealed")
                                  (when (:matched? tile) " match"))}
@@ -15,15 +16,15 @@
                                         (when-let [face (:face tile)]
                                           (name face)))}))))
 
-(q/defcomponent Line [tiles]
+(q/defcomponent Line [tiles player-moves]
   (apply d/div {:className "line"}
-         (map Cell tiles)))
+         (map #(Cell % player-moves) tiles)))
 
-(q/defcomponent Board [game]
+(q/defcomponent Board [game player-moves]
   (apply d/div {:className (str "board clearfix"
                                 (when (:foggy? game)
                                   " foggy"))}
-         (map Line (partition 4 (:tiles game)))))
+         (map #(Line % player-moves) (partition 4 (:tiles game)))))
 
 (q/defcomponent Sand [sand]
   (d/div {:className (str "sand " (name sand))}))
@@ -32,9 +33,9 @@
   (apply d/div {:className "timer"}
          (map Sand sand)))
 
-(q/defcomponent Game [game]
+(q/defcomponent Game [game player-moves]
   (d/div {}
-         (Board game)
+         (Board game player-moves)
          (Hourglass (:sand game))))
 
 (enable-console-print!)
@@ -44,6 +45,5 @@
         container (.getElementById js/document "main")]
     (go-loop []
       (when-let [envelope (<! server-ch)]
-        (q/render (Game (:message envelope)) container)
-        (prn envelope)
+        (q/render (Game (:message envelope) server-ch) container)
         (recur)))))

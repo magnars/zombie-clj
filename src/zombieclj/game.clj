@@ -133,3 +133,7 @@
         count-down
         (update-in [:tiles] dec-remaining-ticks)
         (update-in [:tiles] conceal-expired-tiles))))
+
+(defn game-over? [game]
+  (or (:dead? game)
+      (:safe? game)))
