@@ -1,7 +1,24 @@
 body {background: #b5afa7 url(zombieclj.png) no-repeat 23px 30px; background-size: 380px;}
-.watermark {position: absolute; width: 100%; z-index: -1;}
+
+body.interlude {background-color: #000;}
+
+.narrative {margin: 0 auto; width: 800px; padding-top: 200px; font-size: 35px; color: #999; text-align: center;}
+.narrative p {margin-bottom: 1em;}
+.narrative a {color: red;}
 
 #main {margin: 0 auto; width: 864px; position: relative;}
+
+.watermark {position: absolute; width: 100%; z-index: -1;}
+
+#eaten {position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: -1; opacity: 0;}
+.watermark {-webkit-transition: background-color 1000ms;}
+#eaten img {margin: 200px auto 0; display: block; -webkit-transform: scale(0.1); -webkit-transition: all 1500ms cubic-bezier(0.215, 0.610, 0.150, 1.170);}
+#eaten {-webkit-transition: opacity 1000ms;}
+.game-over .watermark {z-index: 1; background-color: red;}
+.game-over #eaten {opacity: 1; z-index: 2;}
+.game-over #eaten img {-webkit-transform: scale(1);}
+.game-over #main {display: none;}
+body.game-over {background: #b5afa7;}
 
 .timer {position: absolute; top: 34px; right: -80px; width: 80px; border-radius: 10px; background: #a49e96; height: 785px; padding-top: 3px;}
 
@@ -10,7 +27,7 @@ body {background: #b5afa7 url(zombieclj.png) no-repeat 23px 30px; background-siz
     text-indent:0;
     height:22px;
     margin: 2px 5px;
-    -webkit-transition: all 1000ms;
+    --webkit-transition: all 1000ms;
     background: #a49e96; box-shadow: none; border: 1px solid #000;
     opacity: 0.1;
 }
