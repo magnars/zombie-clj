@@ -44,6 +44,9 @@
   (let [server-ch (<! (ws-ch "ws://localhost:8666/ws" {:format :edn}))
         container (.getElementById js/document "main")]
     (go-loop []
-      (when-let [envelope (<! server-ch)]
-        (q/render (Game (:message envelope) server-ch) container)
-        (recur)))))
+      (when-let [game (:message (<! server-ch))]
+        (cond
+         (:dead? game) (set! (.-className (.-body js/document)) "game-over")
+         (:safe? game) (set! (.-href js/location) "safe.html")
+         :else (do (q/render (Game game server-ch) container)
+                   (recur)))))))
