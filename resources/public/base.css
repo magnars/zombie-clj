@@ -1,66 +1,199 @@
-body {background: #b5afa7 url(zombieclj.png) no-repeat 23px 30px; background-size: 380px;}
+body {
+    background: #b5afa7 url(zombieclj.png) no-repeat 23px 30px;
+    background-size: 380px;
+}
 
-body.interlude {background-color: #000;}
+body.interlude {
+    background-color: #000;
+}
 
-.narrative {margin: 0 auto; width: 800px; padding-top: 200px; font-size: 35px; color: #999; text-align: center;}
-.narrative p {margin-bottom: 1em;}
-.narrative a {color: red;}
+.narrative {
+    margin: 0 auto;
+    width: 800px;
+    padding-top: 200px;
+    font-size: 35px;
+    color: #999;
+    text-align: center;
+}
 
-#main {margin: 0 auto; width: 864px; position: relative;}
+.narrative p {
+    margin-bottom: 1em;
+}
 
-.watermark {position: absolute; width: 100%; z-index: -1;}
+.narrative a {
+    color: red;
+}
 
-#eaten {position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: -1; opacity: 0;}
-.watermark {-webkit-transition: background-color 1000ms;}
-#eaten img {margin: 200px auto 0; display: block; -webkit-transform: scale(0.1); -webkit-transition: all 1500ms cubic-bezier(0.215, 0.610, 0.150, 1.170);}
-#eaten {-webkit-transition: opacity 1000ms;}
-.game-over .watermark {z-index: 1; background-color: red;}
-.game-over #eaten {opacity: 1; z-index: 2;}
-.game-over #eaten img {-webkit-transform: scale(1);}
-.game-over #main {display: none;}
-body.game-over {background: #b5afa7;}
+#main {
+    margin: 0 auto;
+    width: 864px;
+    position: relative;
+}
 
-.timer {position: absolute; top: 34px; right: -80px; width: 80px; border-radius: 10px; background: #a49e96; height: 785px; padding-top: 3px;}
+.watermark {
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+
+#eaten {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    opacity: 0;
+}
+
+.watermark {
+    -webkit-transition: background-color 1000ms;
+    -moz-transition: background-color 1000ms;
+}
+
+#eaten img {
+    margin: 200px auto 0;
+    display: block;
+    -webkit-transform: scale(0.1);
+    -moz-transform: scale(0.1);
+    -webkit-transition: all 1500ms cubic-bezier(0.215, 0.610, 0.150, 1.170);
+    -moz-transition: all 1500ms cubic-bezier(0.215, 0.610, 0.150, 1.170);
+}
+
+#eaten {
+    -webkit-transition: opacity 1000ms;
+    -moz-transition: opacity 1000ms;
+}
+
+.game-over .watermark {
+    z-index: 1;
+    background-color: red;
+}
+
+.game-over #eaten {
+    opacity: 1;
+    z-index: 2;
+}
+
+.game-over #eaten img {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+}
+
+.game-over #main {
+    display: none;
+}
+
+body.game-over {
+    background: #b5afa7;
+}
+
+.timer {
+    position: absolute;
+    top: 34px;
+    right: -80px;
+    width: 80px;
+    border-radius: 10px;
+    background: #a49e96;
+    height: 785px;
+    padding-top: 3px;
+}
 
 .sand {
     border-radius:8px;
     text-indent:0;
     height:22px;
     margin: 2px 5px;
-    --webkit-transition: all 1000ms;
-    background: #a49e96; box-shadow: none; border: 1px solid #000;
+    -webkit-transition: all 1000ms;
+     background: #a49e96;
+    box-shadow: none;
+    border: 1px solid #000;
     opacity: 0.1;
 }
 
 .sand.remain {
     opacity: 1;
     box-shadow:inset 0px 1px 0px 0px #bee2f9;
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #63b8ee), color-stop(1, #468ccf));
+    background: -webkit-linear-gradient(top,       #63b8ee 5%, #468ccf 100%);
+    background:    -moz-linear-gradient(top,       #63b8ee 5%, #468ccf 100%);
     border:1px solid #3866a3;
 }
 
 .sand.zombie {
     border: 1px solid #000;
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #63ee63), color-stop(1, #46cf46));
+    background: -webkit-linear-gradient(top,       #63ee63 5%, #46cf46 100%);
+    background:    -moz-linear-gradient(top,       #63ee63 5%, #46cf46 100%);
     opacity: 0.3;
 }
 
-.board {border: 10px solid #a49e96; border-radius: 10px; margin: 20px; background: #938d85;}
+.board {
+    border: 10px solid #a49e96;
+    border-radius: 10px;
+    margin: 20px;
+    background: #938d85;
+}
 
-.cell {float: left; width: 200px; height: 200px; position: relative; -webkit-perspective: 800px;}
-.tile {width: 100%; height: 100%; position: absolute; -webkit-transform-style: preserve-3d; -webkit-transition: -webkit-transform 350ms, opacity 350ms; -webkit-transform: rotateY(0deg)}
+.cell {
+    float: left;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    -webkit-perspective: 800px;
+    -moz-perspective: 800px;
+}
 
-.back, .front {width: 100%; height: 100%; position: absolute; -webkit-backface-visibility: hidden; border: 1px solid #000;}
-.back {-webkit-transform: rotateY(180deg);}
+.tile {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -webkit-transition: -webkit-transform 350ms, opacity 350ms;
+    -moz-transition: -webkit-transform 350ms, opacity 350ms;
+    -moz-transition: -moz-transform 350ms, opacity 350ms;
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+}
 
-.front {background: -webkit-linear-gradient(top,  #d4d4d4 0%,#ccc 40%,#ccc 100%);}
-.front:hover {background: #d2d2d2; cursor: pointer;}
+.back,
+.front {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    border: 1px solid #000;
+}
 
-.tile.revealed {-webkit-transform: rotateY(180deg)}
+.back {
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+}
 
-.tile.match {-webkit-transform: rotateY(180deg) scale(0.9, 0.9); opacity: 0.5;}
+.front {
+    background: #ccc;
+}
 
-.back {background: url(zombie-tiles.jpg); background-size: 1600px;}
+.front:hover {
+    background: #d2d2d2;
+    cursor: pointer;
+}
+
+.tile.revealed {
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+}
+
+.tile.match {
+    -webkit-transform: rotateY(180deg) scale(0.9, 0.9);
+    -moz-transform: rotateY(180deg) scale(0.9, 0.9);
+    opacity: 0.5;
+}
+
+.back {
+    background: url(zombie-tiles.jpg);
+    background-size: 1600px;
+}
 .back.h2 {background-position: -200px 0;}
 .back.h3 {background-position: -400px 0;}
 .back.h4 {background-position: -600px 0;}
@@ -78,7 +211,23 @@ body.game-over {background: #b5afa7;}
 .foggy .back.zo {background-position: -1200px -200px;}
 .foggy .back.fg {background-position: -1400px -200px;}
 
-clearfix:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}
-.clearfix {display: inline-block;}
-html[xmlns] .clearfix {display: block;}
-* html .clearfix {height: 1%;}
+clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
