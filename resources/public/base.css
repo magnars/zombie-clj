@@ -60,14 +60,14 @@ body.game-over {background: #b5afa7;}
 
 .tile.match {-webkit-transform: rotateY(180deg) scale(0.9, 0.9); opacity: 0.5;}
 
-.back {background: url(zombie-tiles.jpg); background-size: 1400px;}
+.back {background: url(zombie-tiles.jpg); background-size: 1600px;}
 .back.h2 {background-position: -200px 0;}
 .back.h3 {background-position: -400px 0;}
 .back.h4 {background-position: -600px 0;}
 .back.h5 {background-position: -800px 0;}
 .back.gy {background-position: -1000px 0;}
 .back.zo {background-position: -1200px 0;}
-.back.fg {background-position: -1200px -200px;}
+.back.fg {background-position: -1400px 0;}
 
 .foggy .back.h1 {background-position: 0 -200px;}
 .foggy .back.h2 {background-position: -200px -200px;}
@@ -75,6 +75,8 @@ body.game-over {background: #b5afa7;}
 .foggy .back.h4 {background-position: -600px -200px;}
 .foggy .back.h5 {background-position: -800px -200px;}
 .foggy .back.gy {background-position: -1000px -200px;}
+.foggy .back.zo {background-position: -1200px -200px;}
+.foggy .back.fg {background-position: -1400px -200px;}
 
 clearfix:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}
 .clearfix {display: inline-block;}
