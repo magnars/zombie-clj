@@ -1,14 +1,19 @@
-# zombieclj
+# Zombie CLJ
 
-A Clojure library designed to ... well, that part is up to you.
+An zombie themed web game made with Clojure and ClojureScript live in the
+norwegian screencast series [zombieclj.no](http://www.zombieclj.no).
 
-## Usage
+## Firing up the game
 
-FIXME
+Zombies are just a `lein run` away.
+
+## Running the tests
+
+We're using midje. `lein midje` works, and so does `lein midje :autotest`.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Magnar Sveen and Christian Johansen
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the [AGPL Version 3 license](http://www.gnu.org/licenses/agpl-3.0.html).
+
