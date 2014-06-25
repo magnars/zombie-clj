@@ -5,7 +5,8 @@ norwegian screencast series [zombieclj.no](http://www.zombieclj.no).
 
 ## Firing up the game
 
-Zombies are just a `lein run` away.
+Compile the ClojureScript with `lein cljsbuild once`, and then zombies are just
+a `lein run` away.
 
 ## Running the tests
 
